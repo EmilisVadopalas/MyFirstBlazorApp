@@ -1,0 +1,86 @@
+﻿@using System.Security.Claims
+@using MyFirstServerSideBlazor.Authentification
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+    <a class="navbar-brand" href="#">My First Blazor App</a>    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+      <ul class="navbar-nav" style="justify-content: flex-end">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" @onclick="NavigateToBooks" >Books</a>
+        </li>        
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @UserName
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+            <li><a class="dropdown-item" @onclick="LogoutAction">Logout</a></li>
+          </ul>
+        </li>       
+      </ul>
+    </div>   
+  </div>
+</nav>
+
+<div class="MainBody">
+    @Body
+</div>
+
+<style>
+    
+    html{
+        height: 100%;
+    }
+    
+    .MainBody{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        justify-items: center;
+        height: 100%;
+        width: 100%;
+        align-content: center;
+    }
+    
+    body, #app{
+        height: 100%;
+    }
+    
+</style>
+
+@code{
+
+    public List<string> Knyhos { get; set; }
+
+    public string UserName { get; set; }
+
+    public string SearchKeyword { get; set; }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        UserName = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Claims.Where(x => 
+            x.Type == ClaimTypes.Name).FirstOrDefault()?.Value ?? "??";
+
+        StateHasChanged();
+    }
+
+    protected async Task LogoutAction()
+    {
+        ((TokenAuthenticationStateProviderServise)AuthenticationStateProvider).UserLogOut();
+    }  
+
+    protected async Task NavigateToBooks()
+    {
+        NavigationManager.NavigateTo("/Books");
+
+    }
+}
+

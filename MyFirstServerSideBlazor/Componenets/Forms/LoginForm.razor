@@ -7,8 +7,9 @@
 @inject IAccessTokenServise TokenServise
 @inject ILocalStorageService LocalStorageServise
 @inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager NavigationManager
 
-<div class="LoginMainContainer hide">
+<div class="LoginMainContainer ShowTransition">
     <div class="LogoContainer">
         <img src="https://iconape.com/wp-content/files/sh/51404/svg/c--4.svg" />
     </div>
@@ -195,12 +196,6 @@
     public string Password { get; set; }
 
     protected bool isLoginSuccessfull = true;
-
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        await Task.Delay(1000);
-        await JSRuntime.InvokeVoidAsync("JSMethods.ShowLogin");
-    }
 
     protected async Task LoginAction()
     {

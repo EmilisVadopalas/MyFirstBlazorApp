@@ -5,7 +5,7 @@
     <Found Context="routeData">
         <AuthorizeView>
             <Authorized>
-               <RouteView DefaultLayout="@typeof(EmptyLayout)" RouteData="@routeData" />
+               <RouteView DefaultLayout="@typeof(MainHeaderLayout)" RouteData="@routeData" />
             </Authorized>
             <NotAuthorized>
                 <LoginBody/>

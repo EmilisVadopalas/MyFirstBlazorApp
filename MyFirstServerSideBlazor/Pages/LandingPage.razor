@@ -1,0 +1,25 @@
+﻿@page "/"
+@using System.Security.Claims
+@layout MainHeaderLayout
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h1>(@Role)  @UserName, Sveiki !</h1>
+
+@code{
+    public string UserName { get; set; }
+    public string Role { get; set; }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        var user = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        UserName = user.User.Claims.Where(x => 
+            x.Type == ClaimTypes.Name).FirstOrDefault()?.Value ?? "??";
+
+        Role = user.User.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault()?.Value ?? "??";
+
+        StateHasChanged();
+    }
+}
+

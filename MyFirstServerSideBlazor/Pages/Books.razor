@@ -1,0 +1,237 @@
+﻿@page "/Books"
+
+@using MyFirstServerSideBlazor.Componenets
+@using MyFirstServerSideBlazor.Servises
+@using MyFirstServerSideBlazor.Servises.Contracts
+@using MyFirstServerSideBlazor.Structures.Books
+
+@inject IBookServise bookServise
+
+<h3 id="PageTitle">Books</h3>
+
+<div class="d-flex">
+  <input @onkeydown="checkKey" class="form-control me-2 authorSearchBox" type="search" @bind="@SearchKeywords" placeholder="Search" aria-label="Search">
+  <button class="btn btn-outline-success" @onclick="SearchForBooks" >Search</button>
+</div>
+
+@{
+    if (isBooksLoading)
+    {
+        <div class="loader book">
+            <figure class="page"></figure>
+            <figure class="page"></figure>
+            <figure class="page"></figure>
+        </div>
+        <h1>Searching for @(SearchKeywords)'s books</h1>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                @{
+                    if(BookList != null && BookList.Count() > 0)
+                    {
+                        foreach(var book in BookList)
+                        {
+                           <BookComponent Book="@book"/>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    }
+}
+
+
+<style>
+
+.container{
+    margin-top: 50px;
+}
+.d-flex{
+    margin-top: 20px;
+    justify-content: center;
+}
+.authorSearchBox{
+    max-width: 500px;
+}
+#PageTitle{
+    margin-top: 20px;
+    text-align: center;
+}
+.card{
+     flex: 1 1 200px;
+}
+.MainBody{
+    display: block !important;
+}
+
+h1 {
+  color: #000;
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 20px;
+  position: relative;
+}
+
+h1:after {
+  position: absolute;
+  content: "";
+  -webkit-animation: Dots 2s cubic-bezier(0, .39, 1, .68) infinite;
+  animation: Dots 2s cubic-bezier(0, .39, 1, .68) infinite;
+}
+
+.loader {
+  margin: 5% auto 30px;
+  background-color: #8a564c;
+}
+
+.book {
+  border: 1px solid #000;
+  width: 60px;
+  height: 45px;
+  position: relative;
+  perspective: 150px;
+}
+
+.page {
+  display: block;
+  width: 30px;
+  height: 45px;
+  border: 1px solid #000;
+  border-left: 1px solid #754941;
+  margin: 0;
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  overflow: hidden;
+  background: #8a564c;
+  transform-style: preserve-3d;
+  -webkit-transform-origin: left center;
+  transform-origin: left center;
+}
+
+.book .page:nth-child(1) {
+  -webkit-animation: pageTurn 1.2s cubic-bezier(0, .39, 1, .68) 1.6s infinite;
+  animation: pageTurn 1.2s cubic-bezier(0, .39, 1, .68) 1.6s infinite;
+}
+
+.book .page:nth-child(2) {
+  -webkit-animation: pageTurn 1.2s cubic-bezier(0, .39, 1, .68) 1.45s infinite;
+  animation: pageTurn 1.2s cubic-bezier(0, .39, 1, .68) 1.45s infinite;
+}
+
+.book .page:nth-child(3) {
+  -webkit-animation: pageTurn 1.2s cubic-bezier(0, .39, 1, .68) 1.2s infinite;
+  animation: pageTurn 1.2s cubic-bezier(0, .39, 1, .68) 1.2s infinite;
+}
+
+
+/* Page turn */
+
+@@-webkit-keyframes pageTurn {
+  0% {
+    -webkit-transform: rotateY( 0deg);
+    transform: rotateY( 0deg);
+  }
+  20% {
+    background: #754941;
+  }
+  40% {
+    background: #754941;
+    -webkit-transform: rotateY( -180deg);
+    transform: rotateY( -180deg);
+  }
+  100% {
+    background: #754941;
+    -webkit-transform: rotateY( -180deg);
+    transform: rotateY( -180deg);
+  }
+}
+
+@@keyframes pageTurn {
+  0% {
+    transform: rotateY( 0deg);
+  }
+  20% {
+    background: #754941;
+  }
+  40% {
+    background: #754941;
+    transform: rotateY( -180deg);
+  }
+  100% {
+    background: #754941;
+    transform: rotateY( -180deg);
+  }
+}
+
+
+/* Dots */
+
+@@-webkit-keyframes Dots {
+  0% {
+    content: "";
+  }
+  33% {
+    content: ".";
+  }
+  66% {
+    content: "..";
+  }
+  100% {
+    content: "...";
+  }
+}
+
+@@keyframes Dots {
+  0% {
+    content: "";
+  }
+  33% {
+    content: ".";
+  }
+  66% {
+    content: "..";
+  }
+  100% {
+    content: "...";
+  }
+}
+</style>
+
+@code {
+
+    public string SearchKeywords { get; set; }
+
+    public bool isBooksLoading { get; set; }
+
+    public List<Book> BookList { get; set; }
+
+    protected async Task SearchForBooks()
+    {
+        isBooksLoading = true;
+        StateHasChanged();
+
+        BookList = await bookServise.SearchBooksByAuthor(SearchKeywords);
+
+        foreach (var book in BookList)
+        {
+            if (string.IsNullOrWhiteSpace(book.CoverUrl))
+            {
+                book.CoverUrl = $"http://localhost:5004/imageAPI/cover/{book.title}";
+            }
+        }
+
+        isBooksLoading = false;
+        StateHasChanged();
+    }
+
+    protected async Task checkKey(KeyboardEventArgs args)
+    {
+        if(args.Key == "Enter")
+        {
+            await SearchForBooks();
+        }
+    }
+}

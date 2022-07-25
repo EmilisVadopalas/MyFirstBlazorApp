@@ -9,9 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <script src="js/bootstrap.js"></script>
     <link href="css/site.css" rel="stylesheet" />
-    <link href="share.styles.css" rel="stylesheet" />
-    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+    <link href="share.styles.css" rel="stylesheet" />    
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
 </head>
 <body>
     @RenderBody()
@@ -28,14 +29,6 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
-
-    <script>
-        window.JSMethods = {
-            ShowLogin: function () {
-                document.getElementsByClassName("LoginMainContainer")[0].className = "LoginMainContainer ShowTransition"
-            }
-        }
-    </script>
 
 </body>
 </html>
