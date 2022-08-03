@@ -62,3 +62,9 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+
+@font-face {
+    font-family: "MyFirstFont";
+    src: url("http://localhost:5004/fonts/SnellBT-Regular.otf") format("opentype");
+}

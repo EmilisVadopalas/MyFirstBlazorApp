@@ -4,6 +4,7 @@
 @using MyFirstServerSideBlazor.Servises
 @using MyFirstServerSideBlazor.Servises.Contracts
 @using MyFirstServerSideBlazor.Structures.Books
+@using System.Web
 
 @inject IBookServise bookServise
 
@@ -41,7 +42,6 @@
         </div>
     }
 }
-
 
 <style>
 
@@ -219,7 +219,7 @@ h1:after {
         {
             if (string.IsNullOrWhiteSpace(book.CoverUrl))
             {
-                book.CoverUrl = $"http://localhost:5004/imageAPI/cover/{book.title}";
+                book.CoverUrl = $"http://localhost:5004/imageAPI/cover/{HttpUtility.UrlEncode(book.title)}";
             }
         }
 

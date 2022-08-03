@@ -1,16 +1,25 @@
 ﻿using MyFirstServerSideBlazor.Servises.Contracts;
 using System.Drawing;
+using System.Drawing.Text;
+using System.Runtime.InteropServices;
 
 namespace MyFirstServerSideBlazor.Servises
 {
     public class BookCoverGeneratorServise : IBookCoverGeneratorServise
     {
+        private readonly FontService _fontService;
+
+        public BookCoverGeneratorServise(FontService fontService)
+        {
+            _fontService = fontService;
+        }
+
         public Image CreateCover(string BookTitle)
         {
             var blankCover = Image.FromFile(@"wwwroot/images/Book-Cover-Empty.png");
 
             var cover = WriteTextOnImage(blankCover, BookTitle, 
-                new Font("Arial", 32), 
+                new Font(_fontService.Font.Families[0], 35), 
                 new SolidBrush(Color.Black),
                 new Point(10, 10));
 

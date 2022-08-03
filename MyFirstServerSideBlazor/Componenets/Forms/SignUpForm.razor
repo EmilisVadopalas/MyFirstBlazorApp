@@ -1,4 +1,6 @@
 ﻿@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.JSInterop
 @using MyFirstServerSideBlazor.Authentification
 @using MyFirstServerSideBlazor.Authentification.Contracts
 
@@ -14,20 +16,19 @@
         <img src="https://iconape.com/wp-content/files/sh/51404/svg/c--4.svg" />
     </div>
     <div class="TextBoxesContainer">
-       <input @bind="@UserName" />
-       <input type="password" @bind="@Password" />
+       <input  placeholder="UserName" @bind="@UserName" />
+       <input type="password" placeholder="Enter Password" @bind="@Password" />
+       <input type="password" placeholder="Repeat Password" @bind="@PasswordRepeat" />
     </div>
     <div class="ButtonsContainer">
         @{
-            if(!isLoginSuccessfull){
-            <div class="BadUsernameWarning">Bad user name or password</div>
+            if(string.IsNullOrWhiteSpace(ValidationError)){
+            <div class="BadUsernameWarning">@ValidationError</div>
             }
-         }
-        <input class="button" @onclick="LoginAction" type="button" value="Sign In" />
+         }        
         <input class="button" id="SignUpButton" @onclick="SignUpAction" type="button" value="Sign Up" />        
     </div>
 </div>
-
 
 <style>
     .BadUsernameWarning{
@@ -205,32 +206,16 @@
     {
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     }
-
 </style>
 
 @code {
     public string UserName { get; set; }
     public string Password { get; set; }
-
-    protected bool isLoginSuccessfull = true;
-
-    protected async Task LoginAction()
-    {
-        var user = UserServise.VerifyLogin(UserName, Password);
-
-        if(user != null)
-        {
-            await LocalStorageServise.SetItemAsync("MyFirstServerSideBlazorsFirstToken", TokenServise.CreateAccessToken(user));
-            ((TokenAuthenticationStateProviderServise)AuthProvider).UserAuthenticated(user);
-        }
-        else
-        {
-            isLoginSuccessfull = false;
-        }
-    }
+    public string PasswordRepeat { get; set; }
+    public string ValidationError { get; set; }
 
     protected async Task SignUpAction()
     {
-      
+        
     }
 }
