@@ -1,5 +1,6 @@
 ﻿using MyFirstServerSideBlazor.Authentification.Contracts;
 using MyFirstServerSideBlazor.Database;
+using MyFirstServerSideBlazor.Database.Entities;
 using MyFirstServerSideBlazor.DataTransferObjects_DTO;
 
 namespace MyFirstServerSideBlazor.Authentification
@@ -29,6 +30,22 @@ namespace MyFirstServerSideBlazor.Authentification
                     UserName = user.UserName,
                     Role = user.Role
                 };
+        }
+
+        public async Task<Results> CreateUser(string userName, string password)
+        {
+            var hashedPassword = _cryptographyServise.Hash(password);
+
+            _webDatabaseContext.Users.Add(new BlazorUser
+            {
+                UserName = userName,
+                PasswordHash = hashedPassword,
+                Role = "Base User",
+                Created = DateTime.Now,
+                LastSeen = DateTime.Now
+            });
+
+            await _webDatabaseContext.SaveChangesAsync();
         }
     }
 }

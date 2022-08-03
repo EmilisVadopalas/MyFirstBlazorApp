@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Componenets\Forms\SignUpForm.razor" />
+    <Compile Remove="Logs\**" />
+    <Content Remove="Logs\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <None Remove="Logs\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,18 +37,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Componenets\Forms\SignUpForm.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Componenets\Forms\SignUpForm.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Componenets\Forms\SignUpForm.razor" />
   </ItemGroup>
 
 </Project>

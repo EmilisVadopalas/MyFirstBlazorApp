@@ -13,7 +13,7 @@
 
 <div class="LoginMainContainer ShowTransition">
     <div class="LogoContainer">
-        <img src="https://iconape.com/wp-content/files/sh/51404/svg/c--4.svg" />
+        <h1>Sign Up !</h1>
     </div>
     <div class="TextBoxesContainer">
        <input  placeholder="UserName" @bind="@UserName" />
@@ -22,8 +22,15 @@
     </div>
     <div class="ButtonsContainer">
         @{
-            if(string.IsNullOrWhiteSpace(ValidationError)){
-            <div class="BadUsernameWarning">@ValidationError</div>
+            if((ValidationErrors?.Count() ?? 0) > 0){
+                <ul>
+                    @{
+                        foreach(var error in ValidationErrors)
+                        {
+                            <li class="BadUsernameWarning">@error</li>
+                        }
+                    }                
+                </ul>
             }
          }        
         <input class="button" id="SignUpButton" @onclick="SignUpAction" type="button" value="Sign Up" />        
@@ -31,11 +38,17 @@
 </div>
 
 <style>
-    .BadUsernameWarning{
-        margin-top: 15px;
+
+    ul{
+        padding-left: 70px;
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
     }
-    .button{
-        margin: 10px;
+
+    h1{
+        margin-top: 30px;
     }
 
     #SignUpButton{
@@ -44,11 +57,10 @@
 
     .BadUsernameWarning{
         color: red;
-        font-size: 10px;
-        width: 100%;
+        font-size: 13px;
         display: block;
-        text-align: center;
-        margin-bottom: 20px;
+        text-align: start;
+        min-width: 55%;
     }
 
     .ButtonsContainer{
@@ -112,9 +124,9 @@
     .TextBoxesContainer{
         display: flex;
         flex-wrap: wrap;
+        margin-top: 40px;
         justify-content: center;
         align-content: center;
-        margin-top: 140px;
         width: 100% !important;
     }
 
@@ -212,10 +224,16 @@
     public string UserName { get; set; }
     public string Password { get; set; }
     public string PasswordRepeat { get; set; }
-    public string ValidationError { get; set; }
+    public string[] ValidationErrors { get; set; }
 
     protected async Task SignUpAction()
     {
-        
+        ValidationErrors = new string[]
+            {
+            "Slaptažodis turi buti ilgesnis nei 6 simboliai",
+            "Slaptažodis ivestas antra karta neatitinka",
+            "Slaptažodis ture turėti, bent viena skaiciu (0-9)",
+            "Slaptažodis turi turėti, betn viena is siu simboliu (!@#$%^&*)"
+            };
     }
 }
