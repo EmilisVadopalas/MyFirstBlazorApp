@@ -1,12 +1,23 @@
 ﻿@using MyFirstServerSideBlazor.Componenets.Forms
-@inject NavigationManager navigation
 
-<PageTitle>Login</PageTitle>
+@inject NavigationManager navigation
 
 @{
     if (ShowLogin)
     {
-        <LoginForm/>
+        <PageTitle>Login</PageTitle>
+    }
+    else
+    {
+        <PageTitle>Sign Up</PageTitle>
+    }
+}
+    
+
+@{
+    if (ShowLogin)
+    {
+        <LoginForm ChangePageCallback="ChangeToSignUp"/>
     }
     else
     {
@@ -14,11 +25,13 @@
     }
 }
 
-@{
+@code{
     public bool ShowLogin { get; set; } = true;
 
-    public void MethodCheck()
+    public void ChangeToSignUp()
     {
-        navigation
-    }
+        ShowLogin = false;
+        //navigation.Uri("/SignUp");
+        StateHasChanged();
+    }    
 }

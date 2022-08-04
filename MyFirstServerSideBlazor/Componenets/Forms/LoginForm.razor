@@ -209,6 +209,10 @@
 </style>
 
 @code {
+
+    [Parameter]
+    public EventCallback ChangePageCallback { get; set; }
+
     public string UserName { get; set; }
     public string Password { get; set; }
 
@@ -231,6 +235,6 @@
 
     protected async Task SignUpAction()
     {
-       
+       await ChangePageCallback.InvokeAsync();
     }
 }
