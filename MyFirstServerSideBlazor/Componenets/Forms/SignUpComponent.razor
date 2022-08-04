@@ -44,6 +44,7 @@
 <style>
 
     ul{
+        width: 100%;
         padding-left: 70px;
         margin-top: 40px;
         display: flex;
@@ -258,7 +259,7 @@
     private List<string> ValidateInputs()
     {
         var regexForNumbers = new Regex(@"\d");
-        //var regexForSymbols = new Regex(@"[\W\S_]");
+        var regexForSymbols = new Regex(@"[^\p{L}\d\s@#]");
 
         var validationErrors = new List<string>();
 
@@ -277,10 +278,10 @@
             validationErrors.Add("Slaptažodis ture turėti, bent viena skaiciu (0-9)");
         }
 
-        //if (!regexForSymbols.IsMatch(Password))
-        //{
-        //    validationErrors.Add("Slaptažodis turi turėti, betn viena is siu simboliu (!@#$%^&*)");
-        //}
+        if (!regexForSymbols.IsMatch(Password))
+        {
+            validationErrors.Add("Slaptažodis turi turėti, betn viena is siu simboliu (!@#$%^&*)");
+        }
 
         return validationErrors;
     }
