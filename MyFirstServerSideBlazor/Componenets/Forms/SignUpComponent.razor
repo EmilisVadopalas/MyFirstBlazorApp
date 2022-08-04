@@ -3,6 +3,7 @@
 @using Microsoft.JSInterop
 @using MyFirstServerSideBlazor.Authentification
 @using MyFirstServerSideBlazor.Authentification.Contracts
+@using System.Text.RegularExpressions
 
 @inject IJSRuntime JSRuntime
 @inject IUserServise UserServise
@@ -22,10 +23,10 @@
     </div>
     <div class="ButtonsContainer">
         @{
-            if((ValidationErrors?.Count() ?? 0) > 0){
+            if((validationErrors?.Count() ?? 0) > 0){
                 <ul>
                     @{
-                        foreach(var error in ValidationErrors)
+                        foreach(var error in validationErrors)
                         {
                             <li class="BadUsernameWarning">@error</li>
                         }
@@ -224,16 +225,45 @@
     public string UserName { get; set; }
     public string Password { get; set; }
     public string PasswordRepeat { get; set; }
-    public string[] ValidationErrors { get; set; }
+    public List<string> validationErrors { get; set; }
 
     protected async Task SignUpAction()
     {
-        ValidationErrors = new string[]
-            {
-            "Slaptažodis turi buti ilgesnis nei 6 simboliai",
-            "Slaptažodis ivestas antra karta neatitinka",
-            "Slaptažodis ture turėti, bent viena skaiciu (0-9)",
-            "Slaptažodis turi turėti, betn viena is siu simboliu (!@#$%^&*)"
-            };
+        validationErrors = ValidateInputs();
+
+        if (validationErrors.Count() == 0)
+        {
+            //Logic to add User
+        }
+    }
+
+    private List<string> ValidateInputs()
+    {
+        var regexForNumbers = new Regex(@"\d");
+        var regexForSymbols = new Regex(@"\d");
+
+        var validationErrors = new List<string>();
+
+        if(!(Password.Length > 6))
+        {
+            validationErrors.Add("Slaptažodis turi buti ilgesnis nei 6 simboliai");
+        }
+
+        if(Password != PasswordRepeat)
+        {
+            validationErrors.Add("Slaptažodis ivestas antra karta neatitinka");
+        }
+
+        if (!regexForNumbers.IsMatch(Password))
+        {
+            validationErrors.Add("Slaptažodis ture turėti, bent viena skaiciu (0-9)");
+        }
+
+        if (!regexForSymbols.IsMatch(Password))
+        {
+            validationErrors.Add("Slaptažodis turi turėti, betn viena is siu simboliu (!@#$%^&*)");
+        }
+
+        return validationErrors;
     }
 }

@@ -1,5 +1,24 @@
 ﻿@using MyFirstServerSideBlazor.Componenets.Forms
+@inject NavigationManager navigation
+
 <PageTitle>Login</PageTitle>
 
-@*<LoginForm/>*@
-<SignUpComponent/>
+@{
+    if (ShowLogin)
+    {
+        <LoginForm/>
+    }
+    else
+    {
+        <SignUpComponent/>
+    }
+}
+
+@{
+    public bool ShowLogin { get; set; } = true;
+
+    public void MethodCheck()
+    {
+        navigation
+    }
+}

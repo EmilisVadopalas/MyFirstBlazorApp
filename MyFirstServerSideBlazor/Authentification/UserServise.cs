@@ -32,20 +32,20 @@ namespace MyFirstServerSideBlazor.Authentification
                 };
         }
 
-        public async Task<Results> CreateUser(string userName, string password)
-        {
-            var hashedPassword = _cryptographyServise.Hash(password);
+        //public async Task<Results> CreateUser(string userName, string password)
+        //{
+        //    var hashedPassword = _cryptographyServise.Hash(password);
 
-            _webDatabaseContext.Users.Add(new BlazorUser
-            {
-                UserName = userName,
-                PasswordHash = hashedPassword,
-                Role = "Base User",
-                Created = DateTime.Now,
-                LastSeen = DateTime.Now
-            });
+        //    _webDatabaseContext.Users.Add(new BlazorUser
+        //    {
+        //        UserName = userName,
+        //        PasswordHash = hashedPassword,
+        //        Role = "Base User",
+        //        Created = DateTime.Now,
+        //        LastSeen = DateTime.Now
+        //    });
 
-            await _webDatabaseContext.SaveChangesAsync();
-        }
+        //    await _webDatabaseContext.SaveChangesAsync();
+        //}
     }
 }
