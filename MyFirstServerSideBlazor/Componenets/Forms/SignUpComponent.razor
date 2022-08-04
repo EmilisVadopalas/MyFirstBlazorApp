@@ -12,6 +12,9 @@
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager NavigationManager
 
+@layout LoginBody
+@page "/SignUp"
+
 <div class="LoginMainContainer ShowTransition">
     <div class="LogoContainer">
         <h1>Sign Up !</h1>
@@ -222,6 +225,9 @@
 </style>
 
 @code {
+    [Parameter]
+    public EventCallback ChangePageCallback { get; set; }
+
     public string UserName { get; set; }
     public string Password { get; set; }
     public string PasswordRepeat { get; set; }
@@ -233,14 +239,26 @@
 
         if (validationErrors.Count() == 0)
         {
-            //Logic to add User
+            var result = await UserServise.CreateUser(UserName, Password);
+
+            if (result.IsSuccessfull)
+            {
+                await LocalStorageServise.SetItemAsync("MyFirstServerSideBlazorsFirstToken", TokenServise.CreateAccessToken(result.Content));
+                ((TokenAuthenticationStateProviderServise)AuthProvider).UserAuthenticated(result.Content);
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                var validationErrors = new List<string>();
+                validationErrors.Add(result.Error);
+            }
         }
     }
 
     private List<string> ValidateInputs()
     {
         var regexForNumbers = new Regex(@"\d");
-        var regexForSymbols = new Regex(@"\d");
+        //var regexForSymbols = new Regex(@"[\W\S_]");
 
         var validationErrors = new List<string>();
 
@@ -259,10 +277,10 @@
             validationErrors.Add("Slaptažodis ture turėti, bent viena skaiciu (0-9)");
         }
 
-        if (!regexForSymbols.IsMatch(Password))
-        {
-            validationErrors.Add("Slaptažodis turi turėti, betn viena is siu simboliu (!@#$%^&*)");
-        }
+        //if (!regexForSymbols.IsMatch(Password))
+        //{
+        //    validationErrors.Add("Slaptažodis turi turėti, betn viena is siu simboliu (!@#$%^&*)");
+        //}
 
         return validationErrors;
     }

@@ -21,17 +21,43 @@
     }
     else
     {
-        <SignUpComponent/>
+        <SignUpComponent ChangePageCallback="ChangeToLogin"/>
     }
 }
 
 @code{
     public bool ShowLogin { get; set; } = true;
 
+    protected override void OnInitialized()
+    {
+        LocationChanged(null,null);
+        navigation.LocationChanged += LocationChanged;
+        base.OnInitialized();
+    }
+
+    void LocationChanged(object sender, LocationChangedEventArgs e)
+    {       
+        if (navigation.Uri.Contains("/signup"))
+        {
+            ShowLogin = false;
+        }
+        else
+        {
+            ShowLogin = true;
+        }
+
+        StateHasChanged();
+    }
+
     public void ChangeToSignUp()
     {
-        ShowLogin = false;
-        //navigation.Uri("/SignUp");
+        navigation.NavigateTo("/signup");
+        StateHasChanged();
+    }    
+
+    public void ChangeToLogin()
+    {
+        navigation.NavigateTo("/login");
         StateHasChanged();
     }    
 }

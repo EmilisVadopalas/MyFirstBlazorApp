@@ -2,6 +2,7 @@
 using MyFirstServerSideBlazor.Database;
 using MyFirstServerSideBlazor.Database.Entities;
 using MyFirstServerSideBlazor.DataTransferObjects_DTO;
+using MyFirstServerSideBlazor.Structures;
 
 namespace MyFirstServerSideBlazor.Authentification
 {
@@ -32,20 +33,31 @@ namespace MyFirstServerSideBlazor.Authentification
                 };
         }
 
-        //public async Task<Results> CreateUser(string userName, string password)
-        //{
-        //    var hashedPassword = _cryptographyServise.Hash(password);
+        public async Task<Result<UserData>> CreateUser(string userName, string password)
+        {
+            try
+            {
+                var hashedPassword = _cryptographyServise.Hash(password);
 
-        //    _webDatabaseContext.Users.Add(new BlazorUser
-        //    {
-        //        UserName = userName,
-        //        PasswordHash = hashedPassword,
-        //        Role = "Base User",
-        //        Created = DateTime.Now,
-        //        LastSeen = DateTime.Now
-        //    });
+                var user = new BlazorUser
+                {
+                    UserName = userName,
+                    PasswordHash = hashedPassword,
+                    Role = "Base User",
+                    Created = DateTime.Now,
+                    LastSeen = DateTime.Now
+                };
 
-        //    await _webDatabaseContext.SaveChangesAsync();
-        //}
+                _webDatabaseContext.Users.Add(user);
+
+                await _webDatabaseContext.SaveChangesAsync();
+
+                return Result<UserData>.Success(new UserData { UserName = user.UserName, Role = user.Role });
+            }
+            catch (Exception ex)
+            {
+                return Result<UserData>.Failure(ex.Message);
+            }
+        }
     }
 }
