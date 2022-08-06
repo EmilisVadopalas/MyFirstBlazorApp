@@ -1,10 +1,13 @@
 ﻿@using System.Security.Claims
 @using MyFirstServerSideBlazor.Authentification
+@using MudBlazor
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
     <a class="navbar-brand" href="#">My First Blazor App</a>    
@@ -14,8 +17,11 @@
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
       <ul class="navbar-nav" style="justify-content: flex-end">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" @onclick="NavigateToBooks" >Books</a>
-        </li>        
+          <a class="nav-link" aria-current="page" @onclick="NavigateToBooks" >Books</a>
+        </li>    
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" @onclick="NavigateToEmailServise" >Email Servise</a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             @UserName
@@ -34,7 +40,11 @@
 </div>
 
 <style>
-    
+    .nav-item{
+        cursor: pointer;
+        
+    }
+
     html{
         height: 100%;
     }
@@ -80,7 +90,11 @@
     protected async Task NavigateToBooks()
     {
         NavigationManager.NavigateTo("/Books");
+    }
 
+    protected async Task NavigateToEmailServise()
+    {
+        NavigationManager.NavigateTo("/EmailServise");
     }
 }
 

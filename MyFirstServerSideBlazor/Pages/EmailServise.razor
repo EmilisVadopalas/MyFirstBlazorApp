@@ -1,0 +1,63 @@
+﻿@using MudBlazor
+@using MyFirstServerSideBlazor.Servises
+
+@page "/EmailServise"
+
+@inject IEmailServise EmailSenderServise
+
+<div class="EmailFormBody">
+    <MudItem xs="11" sm="11" md="11">
+        <MudTextField Label="Receivers" T="string" @ref="ReceiversField"/>
+    </MudItem>
+    <MudItem xs="11" sm="11" md="11">
+        <MudTextField Label="Subject" T="string" @ref="SubjectField"/>
+    </MudItem>
+    <MudItem xs="11" sm="11" md="11">
+        <MudTextField T="string" Label="Massage" Variant="Variant.Outlined" @ref="EmailField" Lines="20" />
+    </MudItem>
+    <MudButton Variant="Variant.Filled" OnClick="SendMail"  StartIcon="@Icons.Material.Filled.Send" Size="Size.Large" Color="Color.Success">Send</MudButton>
+</div>
+
+<style>
+    .MainBody{
+        background-color: #f3f3f3 !important;
+    }
+
+    .EmailFormBody{
+        min-height: 700px;
+        min-width: 1200px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        background-color: white;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+</style>
+
+@code {
+    public MudTextField<string> ReceiversField;
+    public MudTextField<string> SubjectField;
+    public MudTextField<string> EmailField;
+
+    private async Task SendMail()
+    {
+        var subject = SubjectField.Text;
+        var emailsString = ReceiversField.Text;
+        var message = EmailField.Text;
+
+        string[] emails;
+
+        if (emailsString.Contains(","))
+        {
+            emails = emailsString.Split(",");            
+        }
+        else
+        {
+            emails = new string[1] { emailsString.Trim() };
+        }
+
+        await EmailSenderServise.SendMail(emails, subject, message);
+    }
+}
+

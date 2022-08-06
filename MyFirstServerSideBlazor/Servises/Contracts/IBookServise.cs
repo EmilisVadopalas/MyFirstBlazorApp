@@ -6,4 +6,10 @@ namespace MyFirstServerSideBlazor.Servises
     {
         public Task<List<Book>> SearchBooksByAuthor(string searchKeyWords);
     }
+
+    public interface IEmailServise 
+    {
+        public Task SendMail(string[] emails, string subject, string message);
+    }
+
 }
